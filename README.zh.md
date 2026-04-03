@@ -6,7 +6,7 @@
 
 ---
 
-![预览](./references/preview.svg)
+![预览](./figs/example1.png)
 
 > 在浏览器中打开 [`references/example_psych_experiment_flowchart.html`](./references/example_psych_experiment_flowchart.html) 查看完整的交互示例。
 

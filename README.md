@@ -6,7 +6,7 @@
 
 ---
 
-![Preview](./references/preview.svg)
+![Preview](./figs/example1.png)
 
 > Open [`references/example_psych_experiment_flowchart.html`](./references/example_psych_experiment_flowchart.html) in a browser to see a full interactive example.
 
