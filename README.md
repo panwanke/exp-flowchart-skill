@@ -14,7 +14,7 @@
 
 ## Features
 
-- **Code parsing** — reads `config.js`, `factories.js`, MATLAB `.m` or Python `.py` scripts and extracts the trial timeline automatically
+- **Code parsing** — reads `config.js`, `factories.js`, `MATLAB.m` or Python `.py` scripts and extracts the trial timeline automatically
 - **Natural language input** — works with plain descriptions like `"Fixation 500ms → Two images left/right 1000ms → Blank response screen 2000ms"`
 - **Clarifying questions** — asks 1–3 targeted questions before generating, so the output matches your exact design
 - **APA-ready styling** — pure black-and-white, Arial font, italic timing labels, bold action text
