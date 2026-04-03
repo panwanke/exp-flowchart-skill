@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>实验流程图 - Abstract Same-Different Task</title>
+  <style>
+    /* =========================================================
+       【用户自定义参数区】
+       您可以通过修改这里的数值，快速全局调整图形的大小和间距
+       ========================================================= */
+    :root {
+      /* 屏幕(Frame)相关 */
+      --frame-width: 180px;      /* 屏幕方框的宽度 */
+      --frame-height: 120px;     /* 屏幕方框的高度 */
+      --frame-border: 2px;       /* 屏幕边框粗细 */
+      
+      /* 节点间距与箭头 */
+      --arrow-length: 25px;      /* 箭头连线的长度 (缩短了) */
+      --arrow-thickness: 2px;    /* 箭头连线的粗细 */
+      
+      /* 刺激物相关 */
+      --stim-size: 24px;         /* 几何图形的尺寸 */
+      --text-size: 24px;         /* 汉字的字号 */
+      --fixation-size: 28px;     /* 注视点 "+" 的字号 */
+      
+      /* 刺激布局间距 */
+      --stim-group-gap: 8px;     /* Pair内部两个刺激上下的间距 */
+      --layout-gap: 15px;        /* 左Pair、注视点、右Pair之间的左右间距 */
+      
+      /* 底部文字标注相关 */
+      --annotation-margin: 12px; /* 标注文字距离上方屏幕的间距 */
+      --time-font-size: 13px;    /* 时间参数的字号 */
+      --desc-font-size: 13px;    /* 描述文字的字号 */
+    }
+
+    /* =========================================================
+       【全局与布局样式，通常不需要修改】
+       ========================================================= */
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background-color: #ffffff;
+      color: #000000;
+      display: flex;
+      justify-content: center;
+      padding: 40px;
+      margin: 0;
+    }
+
+    .figure-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 1000px; /* 限制最大宽度 */
+    }
+
+    .flowchart {
+      display: flex;
+      flex-direction: row;
+      align-items: flex-start;
+      justify-content: center; /* 居中对齐所有节点 */
+      width: 100%;
+    }
+
+    /* 单个节点容器 */
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: var(--frame-width);
+    }
+
+    /* 计算机屏幕模拟 */
+    .screen {
+      width: var(--frame-width);
+      height: var(--frame-height);
+      border: var(--frame-border) solid #000;
+      background-color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      box-sizing: border-box;
+    }
+
+    /* --- 刺激物渲染样式 --- */
+    .fixation {
+      font-size: var(--fixation-size);
+      font-weight: normal;
+      line-height: 1;
+    }
+
+    /* 真实试次布局：左-中-右 */
+    .stimulus-layout {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: var(--layout-gap);
+    }
+
+    /* 组内布局：上下排列 pair */
+    .stimulus-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: var(--stim-group-gap);
+    }
+
+    .stim-shape {
+      width: var(--stim-size);
+      height: var(--stim-size);
+      border: 2px solid #000;
+      box-sizing: border-box;
+    }
+    
+    .shape-circle {
+      border-radius: 50%;
+    }
+
+    .stim-text {
+      font-size: var(--text-size);
+      font-weight: bold;
+      line-height: 1;
+    }
+
+    /* --- 标注区域 --- */
+    .annotation {
+      margin-top: var(--annotation-margin);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    .time {
+      font-style: italic;
+      font-size: var(--time-font-size);
+      margin-bottom: 4px;
+    }
+
+    .desc {
+      font-size: var(--desc-font-size);
+      font-weight: bold;
+      line-height: 1.3;
+    }
+
+    /* --- 箭头连线 --- */
+    .arrow-container {
+      display: flex;
+      align-items: center;
+      height: var(--frame-height); /* 对齐屏幕中心 */
+      margin: 0 5px; /* 箭头两侧微调间距 */
+    }
+
+    .arrow {
+      width: var(--arrow-length);
+      height: var(--arrow-thickness);
+      background-color: #000;
+      position: relative;
+    }
+
+    .arrow::after {
+      content: '';
+      position: absolute;
+      right: -2px;
+      top: calc( (var(--arrow-thickness) / 2) - 5px ); /* 动态居中箭头三角形 */
+      border-top: 5px solid transparent;
+      border-bottom: 5px solid transparent;
+      border-left: 8px solid #000;
+    }
+
+    /* 图注 */
+    .figure-caption {
+      margin-top: 30px;
+      font-size: 14px;
+      line-height: 1.6;
+      text-align: justify;
+      width: 100%;
+      border-top: 1px solid #000;
+      padding-top: 15px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="figure-container">
+    <div class="flowchart">
+      
+      <div class="step">
+        <div class="screen">
+          <div class="fixation">+</div>
+        </div>
+        <div class="annotation">
+          <span class="time">300 - 1000 ms</span>
+          <span class="desc">注视点<br>(Fixation)</span>
+        </div>
+      </div>
+
+      <div class="arrow-container"><div class="arrow"></div></div>
+
+      <div class="step">
+        <div class="screen">
+          <div class="stimulus-layout">
+            <div class="stimulus-group">
+              <div class="stim-shape shape-circle"></div>
+              <div class="stim-shape shape-circle"></div>
+            </div>
+            
+            <div class="fixation">+</div>
+            
+            <div class="stimulus-group">
+              <div class="stim-text">圆</div>
+              <div class="stim-text">圆</div>
+            </div>
+          </div>
+        </div>
+        <div class="annotation">
+          <span class="time">500 ms</span>
+          <span class="desc">刺激呈现<br>(Stimulus Pair)</span>
+        </div>
+      </div>
+
+      <div class="arrow-container"><div class="arrow"></div></div>
+
+      <div class="step">
+        <div class="screen">
+          </div>
+        <div class="annotation">
+          <span class="time">Max 2000 ms</span>
+          <span class="desc">按键反应<br>F:相同 / J:不同</span>
+        </div>
+      </div>
+
+      <div class="arrow-container"><div class="arrow"></div></div>
+
+      <div class="step">
+        <div class="screen">
+          </div>
+        <div class="annotation">
+          <span class="time">300 ms</span>
+          <span class="desc">试次间隔<br>(ITI)</span>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="figure-caption">
+      <strong>Figure 1.</strong> 实验单试次流程图 (Abstract Same-Different Task)。
+      图中展示了“抽象概念-同质-相同 (abstract_homogeneous_same)” 以及“左右布局 (left-right)” 条件下的一个典型正式试次。
+      每个试次以注视点十字 (300-1000 ms) 开始。随后同时呈现参考刺激对与比较刺激对 (500 ms)，刺激对之间伴有中央注视点。在此同质相同 (homogeneous-same) 示例中，左侧一对为两个相同的圆形图案，右侧一对为两个相同的汉字“圆”。刺激消失后进入最长 2000 ms 的空屏反应窗口，被试需按键判断左右两侧表达的概念是否相同。试次间隔为 300 ms。
+    </div>
+  </div>
+
+</body>
+</html>
